@@ -1,0 +1,24 @@
+{
+  "name": "cchomework-kt",
+  "version": "1.0.0",
+  "description": "Note: There is no week 9 because it's combined with the week 8 project.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Creative-Coding-DM-GY6063E-F26/cchomework-kt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Creative-Coding-DM-GY6063E-F26/cchomework-kt/issues"
+  },
+  "homepage": "https://github.com/Creative-Coding-DM-GY6063E-F26/cchomework-kt#readme",
+  "devDependencies": {
+    "@types/p5": "^1.7.7"
+  }
+}
