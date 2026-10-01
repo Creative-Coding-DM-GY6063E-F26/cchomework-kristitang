@@ -126,6 +126,7 @@ function draw() {
         60, 340, 
         100, 400, 
         60, 400);
+        
     //Maroon
     fill(150,50,50)
     push();

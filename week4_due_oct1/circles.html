@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morie Effect - Circles</title>
+  <script>
+    if (location.search.indexOf("preview") !== -1) {
+      document.documentElement.classList.add("preview");
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.0/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5.plotsvg@latest/dist/p5.plotSvg.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" href="../paint.css">
+  <style>
+    body { background: #008080; }
+    .nav {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 10;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 12px;
+    }
+    .nav a {
+      color: #000;
+      background: #c0c0c0;
+      text-decoration: none;
+      padding: 2px 8px;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+    }
+    html.preview .nav { display: none; }
+  </style>
+</head>
+<body>
+  <nav class="nav"><a href="../gallery.html">Gallery</a></nav>
+  <script src="sketch-circles.js"></script>
+  <script>
+    if (document.documentElement.classList.contains("preview")) {
+      const start = setup;
+      setup = function () {
+        start();
+        noLoop();
+      };
+    }
+  </script>
+  <script src="../paint.js"></script>
+</body>
+</html>
