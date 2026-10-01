@@ -3,9 +3,7 @@ p5.disableFriendlyErrors = true;
 let bDoExportSvg = false; 
 
 function setup(){
-  // Canvas is slightly smaller than US Letter (7.5" x 10" at 96dpi)
-  // This gives you a nice half-inch safe margin around the paper!
-  createCanvas(720, 960); 
+  createCanvas(1056, 816); 
   angleMode(DEGREES);
 }
 
@@ -16,7 +14,7 @@ function keyPressed(){
 }
 
 function draw(){
-  background(255); 
+  background('blue'); 
   noFill();
   
   if (bDoExportSvg){
@@ -24,28 +22,25 @@ function draw(){
   }
 
   translate(width / 2, height / 2);
-  
-  // Rotate 90 degrees so the plotter prints it vertically, 
-  // but you view the final paper horizontally!
-  rotate(90); 
 
-  // --- 1. DRAW THE 3 FRAMES (The Art) ---
-  strokeWeight(2); // Keep the drawing pen thin (size 1 or 2)
+  // 3 Layers of planetary systems, each offset by 3 pixels
+  strokeWeight(2); 
   stroke(0);
   
-  drawPlanetarySystem(0, 0); 
-  drawPlanetarySystem(1, 3); 
-  drawPlanetarySystem(2, 6); 
+  // 3 Frame and set a little apart
+  drawPlanetarySystem(0, 0); // Frame 1
+  drawPlanetarySystem(1, 3); // Frame 2
+  drawPlanetarySystem(2, 6); // Frame 3
 
-  // --- 2. DRAW THE MOVING MASK ---
-  strokeWeight(6); // Your 6px Mask Pen
+  // Vertical lines
+  strokeWeight(6); // Thicker lines for the vertical lines
   stroke(0); 
   
-  let offset = (frameCount * 0.5) % 9; 
+  let offset = (frameCount * 0.5) % 9; // 9px offset for 6px line + 3px gap
   
-  // -600 to 600 ensures the lines draw far enough to cover the entire page
   for(let i = -600; i <= 600; i += 9) {
-      line(i + offset + 6, -600, i + offset + 6, 600);
+       //Goes Horizontally
+      line(i + offset + 6, -height/2, i + offset + 6, height/2);
   }
 
   if (bDoExportSvg){
@@ -54,21 +49,22 @@ function draw(){
   }
 }
 
-// --- PLANETARY SYSTEM ---
+// The planetary system consists of a center, orbits, and planets.
 function drawPlanetarySystem(phase, sliceOffset) {
   push();
   
-  // 1. SUN
-  for (let r = 10; r <= 50; r += 5) {
+  // The Center
+  for (let r = 10; r <= 50; r += 3) {
     drawSlicedCircle(0, 0, r, sliceOffset);
   }
+  
 
-  // 2. ORBITS
+  // Orbits
   drawSlicedCircle(0, 0, 150, sliceOffset); 
   drawSlicedCircle(0, 0, 250, sliceOffset); 
   drawSlicedCircle(0, 0, 350, sliceOffset); 
 
-  // 3. PLANETS
+  // Planets
   let angle1 = phase * 120; 
   let p1x = 150 * cos(angle1);
   let p1y = 150 * sin(angle1);
@@ -93,7 +89,7 @@ function drawSlicedPlanet(cx, cy, maxRadius, sliceOffset) {
   }
 }
 
-// --- VECTOR SLICING ---
+// Slicing
 function drawSlicedCircle(cx, cy, r, sliceOffset) {
   let isDrawing = false;
   
@@ -101,6 +97,7 @@ function drawSlicedCircle(cx, cy, r, sliceOffset) {
     let localX = cx + r * cos(angle);
     let localY = cy + r * sin(angle);
     
+    // Calculating localX(Slicing)
     let shiftedX = (localX - sliceOffset) % 9;
     if (shiftedX < 0) shiftedX += 9; 
     
@@ -119,5 +116,6 @@ function drawSlicedCircle(cx, cy, r, sliceOffset) {
       }
     }
   }
+  
   if (isDrawing) endShape();
 }
