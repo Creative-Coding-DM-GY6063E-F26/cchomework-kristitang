@@ -97,7 +97,7 @@ function drawSlicedCircle(cx, cy, r, sliceOffset) {
     let localX = cx + r * cos(angle);
     let localY = cy + r * sin(angle);
     
-    // Calculating localX(Slicing)
+    // Calculating shiftedX to determine if the point is within the slice
     let shiftedX = (localX - sliceOffset) % 9;
     if (shiftedX < 0) shiftedX += 9; 
     
