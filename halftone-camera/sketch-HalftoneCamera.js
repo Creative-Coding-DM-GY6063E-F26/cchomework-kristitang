@@ -7,6 +7,7 @@ p5.disableFriendlyErrors = true;
 let cam;
 let photo;
 let usePhoto = false;
+let facingUser = true;
 let img;
 let dotSpacing = 8;
 let lightSkip = 150;
@@ -23,8 +24,8 @@ function setup() {
     return;
   }
 
-  cam = createCapture(VIDEO);
-  cam.hide();
+  openCamera();
+  showFlipButton();
 
   let photoButton = document.getElementById("use-photo");
   let photoInput = document.getElementById("photo-file");
@@ -50,10 +51,77 @@ function setup() {
     });
   }
 
+  let flipButton = document.getElementById("flip-camera");
+  if (flipButton) {
+    flipButton.addEventListener("click", flipCamera);
+  }
+
   let saveButton = document.getElementById("save-image");
   if (saveButton) {
     saveButton.addEventListener("click", savePicture);
   }
+}
+
+// Phones have a front and a back camera. The button stays hidden on a computer.
+function isPhone() {
+  let ua = navigator.userAgent || "";
+  if (/iPhone|iPod/i.test(ua)) {
+    return true;
+  }
+  if (/Android/i.test(ua) && /Mobile/i.test(ua)) {
+    return true;
+  }
+  return window.matchMedia("(max-width: 700px) and (pointer: coarse)").matches;
+}
+
+function showFlipButton() {
+  let button = document.getElementById("flip-camera");
+  if (button) {
+    button.hidden = !isPhone();
+  }
+}
+
+function stopCamera() {
+  if (!cam) {
+    return;
+  }
+  let stream = cam.elt && cam.elt.srcObject;
+  if (stream) {
+    stream.getTracks().forEach(function (track) {
+      track.stop();
+    });
+  }
+  cam.remove();
+  cam = null;
+}
+
+// facingUser is the front camera. Flip camera asks the phone for the other side.
+function openCamera() {
+  stopCamera();
+  if (!isPhone()) {
+    cam = createCapture(VIDEO);
+    cam.hide();
+    return;
+  }
+
+  let facing = facingUser ? "user" : "environment";
+  cam = createCapture({
+    video: {
+      facingMode: { exact: facing }
+    },
+    audio: false
+  });
+  cam.hide();
+}
+
+function flipCamera() {
+  facingUser = !facingUser;
+  usePhoto = false;
+  let cameraButton = document.getElementById("use-camera");
+  if (cameraButton) {
+    cameraButton.hidden = true;
+  }
+  openCamera();
 }
 
 // A photo from the album replaces the live camera until Use camera is pressed.
@@ -115,6 +183,7 @@ function fitCanvas() {
 }
 
 function windowResized() {
+  showFlipButton();
   fitCanvas();
 }
 
@@ -188,10 +257,10 @@ function draw() {
   }
 
   // Fit the current picture to the window.
-  // The camera is flipped so it behaves like a mirror. A chosen photo stays as it was taken.
+  // The front camera is mirrored. The back camera and a chosen photo stay as they were taken.
   img.push();
   img.background(255);
-  if (!usePhoto) {
+  if (!usePhoto && facingUser) {
     img.translate(img.width, 0);
     img.scale(-1, 1);
   }

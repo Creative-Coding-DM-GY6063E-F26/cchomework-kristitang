@@ -120,7 +120,7 @@
     }
     @media (max-width: 700px) {
       html, body { height: auto; overflow: auto; }
-      .desk { flex-direction: column; }
+      .desk { flex-direction: column; padding-bottom: 56px; }
       .panel { width: 100%; }
     }
   </style>
@@ -163,6 +163,7 @@
         <button id="use-photo" type="button">Use a photo</button>
         <input id="photo-file" type="file" accept="image/*">
         <button id="use-camera" type="button" hidden>Use camera</button>
+        <button id="flip-camera" type="button" hidden>Flip camera</button>
         <button id="save-image" type="button">Save image</button>
       </div>
     </aside>
