@@ -1,11 +1,12 @@
 // Halftone Camera
-// The circles are redrawn from the live camera image.
-// The drawing window keeps the camera's shape.
-// Press 's' or Save SVG to export the current frame.
+// The circles are redrawn from the live camera, or from a photo you choose.
+// The drawing window keeps that picture's shape.
+// Press 's' or Save image to download the current frame as a picture.
 
 p5.disableFriendlyErrors = true;
-let bDoExportSvg = false;
 let cam;
+let photo;
+let usePhoto = false;
 let img;
 let dotSpacing = 8;
 let lightSkip = 150;
@@ -25,18 +26,59 @@ function setup() {
   cam = createCapture(VIDEO);
   cam.hide();
 
-  let saveButton = document.getElementById("save-svg");
-  if (saveButton) {
-    saveButton.addEventListener("click", function () {
-      bDoExportSvg = true;
+  let photoButton = document.getElementById("use-photo");
+  let photoInput = document.getElementById("photo-file");
+  if (photoButton && photoInput) {
+    photoButton.addEventListener("click", function () {
+      photoInput.click();
     });
+    photoInput.addEventListener("change", function () {
+      let file = photoInput.files && photoInput.files[0];
+      if (file) {
+        loadPhotoFile(file);
+      }
+      photoInput.value = "";
+    });
+  }
+
+  let cameraButton = document.getElementById("use-camera");
+  if (cameraButton) {
+    cameraButton.addEventListener("click", function () {
+      usePhoto = false;
+      cameraButton.hidden = true;
+      fitCanvas();
+    });
+  }
+
+  let saveButton = document.getElementById("save-image");
+  if (saveButton) {
+    saveButton.addEventListener("click", savePicture);
+  }
+}
+
+// A photo from the album replaces the live camera until Use camera is pressed.
+async function loadPhotoFile(file) {
+  let url = URL.createObjectURL(file);
+  try {
+    photo = await loadImage(url);
+    usePhoto = true;
+    let cameraButton = document.getElementById("use-camera");
+    if (cameraButton) {
+      cameraButton.hidden = false;
+    }
+    fitCanvas();
+  } finally {
+    URL.revokeObjectURL(url);
   }
 }
 
 function viewSize() {
   let camW = 4;
   let camH = 3;
-  if (captureReady()) {
+  if (usePhoto && photo && photo.width > 0) {
+    camW = photo.width;
+    camH = photo.height;
+  } else if (captureReady()) {
     camW = cam.width;
     camH = cam.height;
   }
@@ -109,10 +151,24 @@ function captureReady() {
   return cam && cam.elt && cam.elt.readyState >= 2 && cam.width > 0;
 }
 
+function pictureReady() {
+  if (usePhoto) {
+    return photo && photo.width > 0;
+  }
+  return captureReady();
+}
+
 function keyPressed() {
   if (key == "s" || key == "S") {
-    bDoExportSvg = true;
+    savePicture();
   }
+}
+
+function savePicture() {
+  if (!pictureReady()) {
+    return;
+  }
+  saveCanvas("halftone-camera", "png");
 }
 
 function draw() {
@@ -122,26 +178,25 @@ function draw() {
   noFill();
   stroke(255 - bgRed, 255 - bgGreen, 255 - bgBlue);
 
-  if (!captureReady()) {
+  if (!pictureReady()) {
     fill(255 - bgRed, 255 - bgGreen, 255 - bgBlue);
     noStroke();
     textAlign(CENTER, CENTER);
     textSize(16);
-    text("Allow the camera to draw from the live image", width / 2, height / 2);
+    text("Allow the camera, or choose a photo", width / 2, height / 2);
     return;
   }
 
-  // Fit the current frame to the window. Flip it so the view behaves like a mirror.
+  // Fit the current picture to the window.
+  // The camera is flipped so it behaves like a mirror. A chosen photo stays as it was taken.
   img.push();
   img.background(255);
-  img.translate(img.width, 0);
-  img.scale(-1, 1);
-  img.image(cam, 0, 0, img.width, img.height);
-  img.pop();
-
-  if (bDoExportSvg) {
-    beginRecordSvg("myOutput.svg");
+  if (!usePhoto) {
+    img.translate(img.width, 0);
+    img.scale(-1, 1);
   }
+  img.image(usePhoto ? photo : cam, 0, 0, img.width, img.height);
+  img.pop();
 
   strokeWeight(2);
 
@@ -158,11 +213,6 @@ function draw() {
   // mode 2 uses keepChance. Set the keep chance less than 1 so that not every circles is going to be redraw
   rotate(PI / 1 - 0);
   drawHalftone(dotSpacing, lightSkip, 2, 0.2);
-
-  if (bDoExportSvg) {
-    endRecordSvg();
-    bDoExportSvg = false;
-  }
 }
 
 // stepSize sets the widest circle: a black pixel is drawn at stepSize.
@@ -182,7 +232,7 @@ function circleDiameter(x, y, stepSize, lightCutoff) {
 }
 
 // mode 2 uses the cell position, so a layer skips the same circles every time.
-// The pattern stays put when you export the SVG.
+// The pattern stays put when you save the image.
 function keepCircle(x, y, mode, keepChance) {
   if (mode !== 2) {
     return true;

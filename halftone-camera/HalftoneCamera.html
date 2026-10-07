@@ -10,7 +10,6 @@
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/p5@2.3.0/lib/p5.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/p5.plotsvg@latest/dist/p5.plotSvg.js"></script>
   <link rel="stylesheet" href="../paint.css">
   <style>
     html, body {
@@ -102,6 +101,10 @@
     .panel button:active {
       border-color: #404040 #fff #fff #404040;
     }
+    .panel button[hidden],
+    .panel input[type="file"] {
+      display: none;
+    }
     .watermark {
       position: fixed;
       right: 16px;
@@ -155,7 +158,12 @@
           <span>Blue <output id="blue-val">255</output></span>
           <input id="blue" type="range" min="0" max="255" step="1" value="255">
         </label>
-        <button id="save-svg" type="button">Save SVG</button>
+        <p class="group">Picture</p>
+        <p class="hint">Use the live camera, or a picture from your photo album.</p>
+        <button id="use-photo" type="button">Use a photo</button>
+        <input id="photo-file" type="file" accept="image/*">
+        <button id="use-camera" type="button" hidden>Use camera</button>
+        <button id="save-image" type="button">Save image</button>
       </div>
     </aside>
   </div>
