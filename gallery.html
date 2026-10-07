@@ -19,7 +19,7 @@
       flex-wrap: wrap;
       gap: 18px;
       align-content: flex-start;
-      padding: 18px 18px 48px;
+      padding: 18px 108px 48px 18px;
     }
     .watermark {
       position: fixed;
@@ -105,6 +105,38 @@
     .square iframe { width: 600px; height: 600px; transform: scale(0.5); }
     .portrait .client { width: 228px; height: 294px; }
     .portrait iframe { width: 816px; height: 1056px; transform: scale(0.27); }
+    .portrait.mona iframe {
+      width: 400px;
+      height: 600px;
+      margin-top: -23px;
+      transform: scale(0.56);
+    }
+    .desk-icons {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .desk-icons a {
+      width: 76px;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: 1px 1px 0 #000;
+    }
+    .desk-icons img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+    .desk-icons span {
+      display: block;
+      margin-top: 4px;
+    }
     .taskbar {
       position: fixed;
       left: 0;
@@ -130,30 +162,22 @@
 </head>
 <body>
   <a class="watermark" href="https://kristitang.com">kristitang.com</a>
+  <nav class="desk-icons">
+    <a href="halftone-camera/HalftoneCamera.html">
+      <img src="halftone-camera/icons/halftone-camera.png" alt="">
+      <span>Halftone Camera</span>
+    </a>
+    <a href="halftone-camera/plotter-drawings/index.html">
+      <img src="halftone-camera/icons/folder.png" alt="">
+      <span>Plotter Drawings</span>
+    </a>
+  </nav>
   <div class="desktop">
-    <section class="win square">
+    <section class="win portrait mona">
       <div class="titlebar"><span>Morie Effect - Mona Lisa</span><a class="close" href="week4_due_oct1/MonaLisa.html">□</a></div>
       <div class="client">
         <iframe src="week4_due_oct1/MonaLisa.html?preview=1" title="Morie Effect - Mona Lisa"></iframe>
         <a class="open" href="week4_due_oct1/MonaLisa.html" aria-label="Open Morie Effect - Mona Lisa"></a>
-      </div>
-      <div class="statusbar">Click to open</div>
-    </section>
-
-    <section class="win planets">
-      <div class="titlebar"><span>Morie Effect - Planets</span><a class="close" href="week4_due_oct1/planets.html">□</a></div>
-      <div class="client">
-        <iframe src="week4_due_oct1/planets.html?preview=1" title="Morie Effect - Planets"></iframe>
-        <a class="open" href="week4_due_oct1/planets.html" aria-label="Open Morie Effect - Planets"></a>
-      </div>
-      <div class="statusbar">Click to open</div>
-    </section>
-
-    <section class="win portrait apple">
-      <div class="titlebar"><span>Morie Effect - Apple</span><a class="close" href="week4_due_oct1/apple.html">□</a></div>
-      <div class="client">
-        <iframe src="week4_due_oct1/apple.html?preview=1" title="Morie Effect - Apple"></iframe>
-        <a class="open" href="week4_due_oct1/apple.html" aria-label="Open Morie Effect - Apple"></a>
       </div>
       <div class="statusbar">Click to open</div>
     </section>
@@ -176,6 +200,24 @@
       <div class="statusbar">Click to open</div>
     </section>
 
+    <section class="win portrait apple">
+      <div class="titlebar"><span>Morie Effect - Apple</span><a class="close" href="week4_due_oct1/apple.html">□</a></div>
+      <div class="client">
+        <iframe src="week4_due_oct1/apple.html?preview=1" title="Morie Effect - Apple"></iframe>
+        <a class="open" href="week4_due_oct1/apple.html" aria-label="Open Morie Effect - Apple"></a>
+      </div>
+      <div class="statusbar">Click to open</div>
+    </section>
+
+    <section class="win planets">
+      <div class="titlebar"><span>Morie Effect - Planets</span><a class="close" href="week4_due_oct1/planets.html">□</a></div>
+      <div class="client">
+        <iframe src="week4_due_oct1/planets.html?preview=1" title="Morie Effect - Planets"></iframe>
+        <a class="open" href="week4_due_oct1/planets.html" aria-label="Open Morie Effect - Planets"></a>
+      </div>
+      <div class="statusbar">Click to open</div>
+    </section>
+
     <section class="win process">
       <div class="titlebar"><span>Process Drawing</span><a class="close" href="week3_due_sep24/index.html">□</a></div>
       <div class="client">
@@ -184,6 +226,7 @@
       </div>
       <div class="statusbar">Click to open</div>
     </section>
+
   </div>
   <div class="taskbar">
     <span class="task"><a href="index.html">Back</a></span>

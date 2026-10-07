@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plotter Drawings</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #008080;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 12px;
+      color: #000;
+    }
+    .nav {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 10;
+    }
+    .nav a {
+      color: #000;
+      background: #c0c0c0;
+      text-decoration: none;
+      padding: 2px 8px;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+    }
+    .win {
+      margin: 48px auto 24px;
+      max-width: 880px;
+      background: #c0c0c0;
+      padding: 2px;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .titlebar {
+      background: #000080;
+      color: #fff;
+      font-weight: bold;
+      padding: 3px 6px;
+      margin-bottom: 2px;
+    }
+    .client {
+      min-height: 280px;
+      padding: 12px;
+      background: #fff;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+    }
+    .drawings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .drawing {
+      width: 180px;
+      color: #000;
+      text-decoration: none;
+      text-align: center;
+    }
+    .drawing img {
+      display: block;
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      background: #fff;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+    }
+    .drawing span {
+      display: block;
+      margin-top: 4px;
+      word-break: break-word;
+    }
+    .empty {
+      margin: 48px 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav"><a href="../../gallery.html">Gallery</a></nav>
+  <section class="win">
+    <div class="titlebar">Plotter Drawings</div>
+    <div class="client">
+      <div class="drawings" id="drawings"></div>
+      <p class="empty" id="empty">Put pen plotter drawings in the plotter-drawings folder, then add the file name to the list in this page.</p>
+    </div>
+  </section>
+  <script>
+    // Add a file name here after you save a drawing in this folder.
+    const drawings = [];
+
+    const list = document.getElementById("drawings");
+    const empty = document.getElementById("empty");
+
+    drawings.forEach(function (name) {
+      const link = document.createElement("a");
+      link.className = "drawing";
+      link.href = name;
+      const image = document.createElement("img");
+      image.src = name;
+      image.alt = name;
+      const label = document.createElement("span");
+      label.textContent = name;
+      link.appendChild(image);
+      link.appendChild(label);
+      list.appendChild(link);
+    });
+
+    if (drawings.length > 0) {
+      empty.style.display = "none";
+    }
+  </script>
+</body>
+</html>

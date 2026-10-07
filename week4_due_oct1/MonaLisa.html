@@ -40,8 +40,8 @@
   <script>
     if (document.documentElement.classList.contains("preview")) {
       const start = setup;
-      setup = function () {
-        start();
+      setup = async function () {
+        await start();
         noLoop();
       };
     }

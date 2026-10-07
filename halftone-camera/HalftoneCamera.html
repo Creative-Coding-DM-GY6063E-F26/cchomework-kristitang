@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halftone Camera</title>
+  <script>
+    if (location.search.indexOf("preview") !== -1) {
+      document.documentElement.classList.add("preview");
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.0/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5.plotsvg@latest/dist/p5.plotSvg.js"></script>
+  <link rel="stylesheet" href="../paint.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #008080;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 12px;
+      color: #000;
+    }
+    .desk {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 12px 12px;
+    }
+    .win {
+      background: #c0c0c0;
+      padding: 2px;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .titlebar {
+      background: #000080;
+      color: #fff;
+      font-weight: bold;
+      padding: 3px 6px;
+      margin-bottom: 2px;
+    }
+    .stage {
+      flex: none;
+      width: fit-content;
+      display: flex;
+      flex-direction: column;
+    }
+    .stage .client {
+      width: fit-content;
+      background: #fff;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+    }
+    .stage canvas { display: block; }
+    .panel {
+      width: 230px;
+      flex: none;
+      align-self: flex-start;
+    }
+    .panel .client {
+      padding: 8px 8px 10px;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+    }
+    .panel label {
+      display: block;
+      margin-top: 10px;
+    }
+    .panel label span {
+      display: flex;
+      justify-content: space-between;
+    }
+    .panel .hint {
+      margin: 2px 0 4px;
+      color: #404040;
+      font-size: 11px;
+    }
+    .panel .group {
+      margin: 12px 0 0;
+      font-weight: bold;
+    }
+    .panel input[type="range"] {
+      width: 100%;
+      margin: 0;
+    }
+    .panel button {
+      display: block;
+      width: 100%;
+      margin-top: 14px;
+      padding: 4px 8px;
+      font: inherit;
+      color: #000;
+      background: #c0c0c0;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+    }
+    .panel button:active {
+      border-color: #404040 #fff #fff #404040;
+    }
+    .watermark {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 5;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.34);
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.28);
+      text-decoration: none;
+    }
+    @media (max-width: 700px) {
+      html, body { height: auto; overflow: auto; }
+      .desk { flex-direction: column; }
+      .panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="desk">
+    <section class="win stage">
+      <div class="titlebar">Halftone Camera</div>
+      <div class="client" id="stage"></div>
+    </section>
+    <aside class="win panel">
+      <div class="titlebar">Contrast</div>
+      <div class="client">
+        <label>
+          <span>Dot spacing <output id="spacing-val">8</output></span>
+          <p class="hint">Wider spacing makes bigger dots.</p>
+          <input id="spacing" type="range" min="6" max="32" step="1" value="8">
+        </label>
+        <label>
+          <span>Light skip <output id="light-val">150</output></span>
+          <p class="hint">Brighter than this stays blank.</p>
+          <input id="light" type="range" min="0" max="255" step="1" value="150">
+        </label>
+        <p class="group">Background</p>
+        <p class="hint">Color behind the dots. The lines use the opposite color.</p>
+        <label>
+          <span>Red <output id="red-val">255</output></span>
+          <input id="red" type="range" min="0" max="255" step="1" value="255">
+        </label>
+        <label>
+          <span>Green <output id="green-val">255</output></span>
+          <input id="green" type="range" min="0" max="255" step="1" value="255">
+        </label>
+        <label>
+          <span>Blue <output id="blue-val">255</output></span>
+          <input id="blue" type="range" min="0" max="255" step="1" value="255">
+        </label>
+        <button id="save-svg" type="button">Save SVG</button>
+      </div>
+    </aside>
+  </div>
+  <a class="watermark" href="https://kristitang.com">kristitang.com</a>
+  <script src="sketch-HalftoneCamera.js"></script>
+  <script src="../paint.js"></script>
+</body>
+</html>
