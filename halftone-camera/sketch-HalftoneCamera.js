@@ -9,8 +9,8 @@ let photo;
 let usePhoto = false;
 let facingUser = true;
 let img;
-let dotSpacing = 8;
-let lightSkip = 150;
+let dotSpacing = 7;
+let lightSkip = 180;
 let bgRed = 255;
 let bgGreen = 255;
 let bgBlue = 255;
@@ -188,8 +188,8 @@ function windowResized() {
 }
 
 function readControls() {
-  dotSpacing = readNumber("spacing", 8);
-  lightSkip = readNumber("light", 150);
+  dotSpacing = readNumber("spacing", 7);
+  lightSkip = readNumber("light", 180);
   bgRed = readNumber("red", 255);
   bgGreen = readNumber("green", 255);
   bgBlue = readNumber("blue", 255);
