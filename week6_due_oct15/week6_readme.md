@@ -3,13 +3,13 @@
 **Date:** Oct 8
 
 ## Topic
-Functions and Arrays
+Animating Sprites
 
 ## Content
-advanced arrays
+functions
 
 ## Assignment
-Assignment 6: Looping animations (Due Oct 15)
+Assignment 6: Animated Clock (Due Oct 15)
 
 I built this clock on the concept of adding time as the fourth dimension.
 
