@@ -14,7 +14,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
   // create mapper object
-  pMapper = _createProjectionMapper(this);
+  pMapper = createProjectionMapper(this);
   //pMapper.load("map.json");
 
   // create "quads" for each surface of your projection
@@ -22,11 +22,6 @@ function setup() {
   quadRight = pMapper.createQuadMap(400, 400, 20, 20);
   quadTop = pMapper.createQuadMap(400, 400, 20, 20);
 
-}
-
-function _createProjectionMapper(context) {
-  this.context = context;
-  return new ProjectionMapper(this.context);
 }
 
 function draw() {

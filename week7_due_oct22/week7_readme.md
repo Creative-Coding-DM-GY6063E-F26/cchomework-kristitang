@@ -14,3 +14,5 @@ Javascript objects, Classes
 ## Assignment
 Assignment 7: Projection Mapping (Due Oct 22)
 Code your homework in the sketch.js file located in this week7_due_oct22 directory
+
+The Sketch is at the week7_due_oct22/examples/cube_calibration/style.css
