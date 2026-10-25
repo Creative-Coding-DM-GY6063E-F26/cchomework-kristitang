@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plotter Drawings</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -13,107 +14,215 @@
       font-size: 12px;
       color: #000;
     }
+    .watermark {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 0;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.34);
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.28);
+      text-decoration: none;
+    }
     .nav {
       position: fixed;
       top: 8px;
       left: 8px;
       z-index: 10;
     }
-    .nav a {
+    .nav a,
+    .close {
       color: #000;
       background: #c0c0c0;
       text-decoration: none;
-      padding: 2px 8px;
       border: 2px solid;
       border-color: #fff #404040 #404040 #fff;
+      font-family: inherit;
+      font-weight: bold;
     }
-    .win {
-      margin: 48px auto 24px;
-      max-width: 880px;
+    .nav a { padding: 2px 8px; }
+    .desktop {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-content: flex-start;
+      padding: 48px 18px 24px;
+    }
+    .thumb,
+    .viewer-win {
       background: #c0c0c0;
       padding: 2px;
       border: 2px solid;
       border-color: #fff #404040 #404040 #fff;
       box-shadow: 1px 1px 0 #000;
     }
+    .thumb {
+      position: relative;
+      z-index: 1;
+      width: min(280px, calc(100vw - 36px));
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+    }
     .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       background: #000080;
       color: #fff;
       font-weight: bold;
-      padding: 3px 6px;
-      margin-bottom: 2px;
+      padding: 3px 4px 3px 6px;
     }
-    .client {
-      min-height: 280px;
-      padding: 12px;
-      background: #fff;
+    .titlebar span {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .thumb img,
+    .thumb video {
+      display: block;
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      object-position: center;
+      background: #808080;
       border: 2px solid;
       border-color: #808080 #fff #fff #808080;
+      pointer-events: none;
     }
-    .drawings {
+    .viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
       display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0, 64, 64, 0.45);
     }
-    .drawing {
-      width: 180px;
-      color: #000;
-      text-decoration: none;
+    .viewer[hidden] { display: none; }
+    .viewer-win {
+      display: flex;
+      flex-direction: column;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 32px);
+    }
+    .close {
+      flex: none;
+      width: 18px;
+      height: 16px;
+      padding: 0;
+      line-height: 12px;
       text-align: center;
+      cursor: pointer;
     }
-    .drawing img {
+    .viewer-win img,
+    .viewer-win video {
       display: block;
-      width: 180px;
-      height: 180px;
+      max-width: min(920px, calc(100vw - 48px));
+      max-height: calc(100vh - 88px);
+      width: auto;
+      height: auto;
       object-fit: contain;
-      background: #fff;
+      background: #808080;
       border: 2px solid;
       border-color: #808080 #fff #fff #808080;
-    }
-    .drawing span {
-      display: block;
-      margin-top: 4px;
-      word-break: break-word;
-    }
-    .empty {
-      margin: 48px 12px;
-      text-align: center;
     }
   </style>
 </head>
 <body>
+  <a class="watermark" href="https://kristitang.com">kristitang.com</a>
   <nav class="nav"><a href="../../gallery.html">Gallery</a></nav>
-  <section class="win">
-    <div class="titlebar">Plotter Drawings</div>
-    <div class="client">
-      <div class="drawings" id="drawings"></div>
-      <p class="empty" id="empty">Put pen plotter drawings in the plotter-drawings folder, then add the file name to the list in this page.</p>
-    </div>
-  </section>
+  <div class="desktop" id="drawings"></div>
+  <div class="viewer" id="viewer" hidden>
+    <section class="viewer-win">
+      <div class="titlebar">
+        <span id="viewer-title"></span>
+        <button type="button" class="close" id="viewer-close">X</button>
+      </div>
+      <img id="viewer-image" alt="" hidden>
+      <video id="viewer-video" controls playsinline hidden></video>
+    </section>
+  </div>
   <script>
-    // Add a file name here after you save a drawing in this folder.
-    const drawings = [];
-
+    const drawings = [
+      "IMG_3926.jpg",
+      "IMG_3929.jpg",
+      "IMG_3934.jpg",
+      "IMG_3918.jpg",
+      "IMG_4340.jpg",
+        "IMG_4343.jpg",
+      "IMG_3931.MOV",
+      "IMG_4348.mov"
+    ];
+    const posters = {
+      "IMG_3931.MOV": "IMG_3931.jpg",
+      "IMG_4348.mov": "IMG_4348.jpg"
+    };
     const list = document.getElementById("drawings");
-    const empty = document.getElementById("empty");
+    const viewer = document.getElementById("viewer");
+    const viewerImage = document.getElementById("viewer-image");
+    const viewerVideo = document.getElementById("viewer-video");
+    const viewerTitle = document.getElementById("viewer-title");
+
+    function isVideo(name) {
+      return /\.(mov|mp4|webm)$/i.test(name);
+    }
+
+    function openPhoto(name) {
+      viewerTitle.textContent = name;
+      if (isVideo(name)) {
+        viewerImage.hidden = true;
+        viewerImage.removeAttribute("src");
+        viewerVideo.hidden = false;
+        viewerVideo.src = name;
+        viewerVideo.play();
+      } else {
+        viewerVideo.pause();
+        viewerVideo.removeAttribute("src");
+        viewerVideo.hidden = true;
+        viewerImage.hidden = false;
+        viewerImage.src = name;
+        viewerImage.alt = name;
+      }
+      viewer.hidden = false;
+    }
+
+    function closePhoto() {
+      viewer.hidden = true;
+      viewerVideo.pause();
+      viewerVideo.removeAttribute("src");
+      viewerVideo.load();
+      viewerImage.removeAttribute("src");
+    }
 
     drawings.forEach(function (name) {
-      const link = document.createElement("a");
-      link.className = "drawing";
-      link.href = name;
-      const image = document.createElement("img");
-      image.src = name;
-      image.alt = name;
-      const label = document.createElement("span");
-      label.textContent = name;
-      link.appendChild(image);
-      link.appendChild(label);
-      list.appendChild(link);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "thumb";
+      const title = document.createElement("div");
+      title.className = "titlebar";
+      const text = document.createElement("span");
+      text.textContent = name;
+      title.appendChild(text);
+      const media = document.createElement("img");
+      media.src = posters[name] || name;
+      media.alt = name;
+      button.appendChild(title);
+      button.appendChild(media);
+      button.addEventListener("click", function () {
+        openPhoto(name);
+      });
+      list.appendChild(button);
     });
 
-    if (drawings.length > 0) {
-      empty.style.display = "none";
-    }
+    document.getElementById("viewer-close").addEventListener("click", closePhoto);
   </script>
 </body>
 </html>

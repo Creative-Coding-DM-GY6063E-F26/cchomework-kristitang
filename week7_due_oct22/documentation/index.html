@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projection Mappings</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #008080;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 12px;
+      color: #000;
+    }
+    .nav {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 10;
+    }
+    .watermark {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 0;
+      font-family: Tahoma, "MS Sans Serif", sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.34);
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.28);
+      text-decoration: none;
+    }
+    .nav a,
+    .close {
+      color: #000;
+      background: #c0c0c0;
+      text-decoration: none;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      font-family: inherit;
+      font-weight: bold;
+    }
+    .nav a { padding: 2px 8px; }
+    .desktop {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-content: flex-start;
+      padding: 48px 18px 24px;
+    }
+    .thumb,
+    .viewer-win {
+      background: #c0c0c0;
+      padding: 2px;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .thumb {
+      position: relative;
+      z-index: 1;
+      width: min(280px, calc(100vw - 36px));
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+    .titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #000080;
+      color: #fff;
+      font-weight: bold;
+      padding: 3px 4px 3px 6px;
+    }
+    .titlebar span {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .thumb img {
+      display: block;
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      object-position: center;
+      background: #808080;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+    }
+    .viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0, 64, 64, 0.45);
+    }
+    .viewer[hidden] { display: none; }
+    .viewer-win {
+      display: flex;
+      flex-direction: column;
+      max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 32px);
+    }
+    .close {
+      flex: none;
+      width: 18px;
+      height: 16px;
+      padding: 0;
+      line-height: 12px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .viewer-win img {
+      display: block;
+      max-width: min(920px, calc(100vw - 48px));
+      max-height: calc(100vh - 88px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      background: #808080;
+      border: 2px solid;
+      border-color: #808080 #fff #fff #808080;
+    }
+  </style>
+</head>
+<body>
+  <a class="watermark" href="https://kristitang.com">kristitang.com</a>
+  <nav class="nav"><a href="../../gallery.html">Gallery</a></nav>
+  <div class="desktop" id="drawings"></div>
+  <div class="viewer" id="viewer" hidden>
+    <section class="viewer-win">
+      <div class="titlebar">
+        <span id="viewer-title"></span>
+        <button type="button" class="close" id="viewer-close">X</button>
+      </div>
+      <img id="viewer-image" alt="">
+    </section>
+  </div>
+  <script>
+    const drawings = ["cube-sponge.jpg", "cube-calibrition.jpg"];
+    const list = document.getElementById("drawings");
+    const viewer = document.getElementById("viewer");
+    const viewerImage = document.getElementById("viewer-image");
+    const viewerTitle = document.getElementById("viewer-title");
+
+    function labelFor(name) {
+      const words = name.replace(/\.[^.]+$/, "").replace(/-/g, " ");
+      return words.charAt(0).toUpperCase() + words.slice(1);
+    }
+
+    function openPhoto(name) {
+      const label = labelFor(name);
+      viewerImage.src = name;
+      viewerImage.alt = label;
+      viewerTitle.textContent = label;
+      viewer.hidden = false;
+    }
+
+    function closePhoto() {
+      viewer.hidden = true;
+      viewerImage.removeAttribute("src");
+    }
+
+    drawings.forEach(function (name) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "thumb";
+      const title = document.createElement("div");
+      title.className = "titlebar";
+      const text = document.createElement("span");
+      text.textContent = labelFor(name);
+      title.appendChild(text);
+      const image = document.createElement("img");
+      image.src = name;
+      image.alt = labelFor(name);
+      button.appendChild(title);
+      button.appendChild(image);
+      button.addEventListener("click", function () {
+        openPhoto(name);
+      });
+      list.appendChild(button);
+    });
+
+    document.getElementById("viewer-close").addEventListener("click", closePhoto);
+  </script>
+</body>
+</html>
