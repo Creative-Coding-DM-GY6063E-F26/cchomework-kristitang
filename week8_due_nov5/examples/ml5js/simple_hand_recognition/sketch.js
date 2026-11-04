@@ -42,7 +42,8 @@ function printFingerDataKey() {
         console.log(`Hand ${index} ${key}:`, finger);
         console.log(finger.x,finger.y);
         let mappedX = map(finger.x,0,320,width,0);
-        let mappedY = map(finger.y,0, 240, height, 0);
+        let mappedY = map(finger.y,0, 240, 0,height);
+        fill(random(255),random(255),random(255));
         circle(mappedX,mappedY,10);
       }
     }
