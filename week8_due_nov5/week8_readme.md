@@ -13,3 +13,4 @@ Assignment 8: gestural control (Due Nov 5)
 Use ml5.js to create a neural network controled drawing machine. The drawing machine should respond to either gestural control from a camera or a video / set of images. 
 For more information about ml5js, visit (https://docs.ml5js.org/#/reference/overview)
 
+Please check work @ cchomework-kt\week8_due_nov5\index.html & cchomework-kt\week8_due_nov5\sketch.js
