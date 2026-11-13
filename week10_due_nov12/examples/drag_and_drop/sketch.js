@@ -16,11 +16,11 @@ function setup() {
   // drop() calls our function once for every file dropped on the canvas.
   // This is a CALLBACK: we hand p5 a function, and p5 calls it later,
   // whenever a file arrives (like mousePressed or ml5's detectStart).
-  canvas.drop(gotFile);
+  canvas.drop(gotFile);//Passing a callback function to drop() is the same as writing:
 
   // optional: light up the canvas while a file is dragged over it
   //uses boolean variables to track state of the drag event
-  canvas.dragOver(() => hovering = true);
+  canvas.dragOver(() => hovering = true); //Annoynmous call back function that sets hovering to true when a file is dragged over the canvas
   canvas.dragLeave(() => hovering = false);
 
   textAlign(CENTER, CENTER);
@@ -33,7 +33,7 @@ async function gotFile(file) {
 
   // a dropped file is a p5.File: look in the console to see everything inside it
   console.log(file);
-  fileInfo = file.name + '\ntype: ' + file.type + '   size: ' + round(file.size / 1024) + ' KB');
+  fileInfo = file.name + '\ntype: ' + file.type + '   size: ' + round(file.size / 1024) + ' KB';
   // file.file is the browser's original File object.
   // createObjectURL gives it a temporary URL, so we can load it
   // like any other image or sound, e.g. loadImage('cat.png')
@@ -71,14 +71,14 @@ function draw() {
 
   // draw the dropped image, scaled to fit the middle of the canvas
   if (img) {
-    let s = min((width - 40) / img.width, 220 / img.height);
+    let s = min((width - 40) / img.width, 220 / img.height);// scale factor to fit the image inside a box 40px smaller than the canvas width, and 220px tall
     imageMode(CENTER);
     image(img, width / 2, 210, img.width * s, img.height * s);
   }
 
   // highlight the border while a file is dragged over the canvas
   noFill();
-  stroke(hovering ? color(80, 160, 255) : 80);
+  stroke(hovering ? color(80, 160, 255) : 80); //One line conditional operator: if hovering is true, use the blue color, otherwise use gray
   strokeWeight(hovering ? 8 : 2);
   rect(0, 0, width, height);
 
